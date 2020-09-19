@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  proxy:
+    build: ./proxy
+    ports:
+      - "80:80"
+  frontend:
+    build: ./sanbar-app
+  backend:
+    build: ./Sanbar.Api
