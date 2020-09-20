@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  proxy:
+    image: michael816/proxy
+    ports:
+      - "80:80"
+  frontend:
+    image: michael816/sanbar-app
+  backend:
+    image: michael816/sanbar-api

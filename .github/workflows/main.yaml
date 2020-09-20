@@ -7,12 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v2
-        - name: docker login
-          env:
-            DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          run: |
-            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         - name: docker build proxy
           run: |
             docker build ./proxy -t michael816/proxy:latest
@@ -22,8 +16,40 @@ jobs:
         - name: docker build sanbar-api
           run: |
             docker build ./Sanbar.Api -t michael816/sanbar-api:latest
+        - name: docker login
+          env:
+            DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          run: |
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         - name: docker push
           run: |
             docker push michael816/proxy:latest
             docker push michael816/sanbar-app:latest
             docker push michael816/sanbar-api:latest
+        - name: setup ssh
+          run: |
+            mkdir ~/.ssh
+            echo "$SSH_KEY" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            cat >>~/.ssh/config <<END
+            Host $SSH_HOST
+              HostName $SSH_HOST
+              User $SSH_USER
+              IdentityFile ~/.ssh/id_rsa
+              StrictHostKeyChecking no
+            END
+          env:
+            SSH_HOST: ${{ secrets.SSH_HOST }}
+            SSH_USER: ${{ secrets.SSH_USER }}
+            SSH_KEY: ${{ secrets.SSH_KEY }}
+        - name: docker-compose pull
+          run: |
+            docker-compose -f docker-compose.production.yaml pull
+          env:
+            DOCKER_HOST: ssh://${{ secrets.SSH_HOST }}
+        - name: docker-compose up
+          run: |
+            docker-compose -f docker-compose.production.yaml up -d --remove-orphans
+          env:
+            DOCKER_HOST: ssh://${{ secrets.SSH_HOST }}

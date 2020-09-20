@@ -1,4 +1,4 @@
-FROM node:latest AS build
+FROM node:alpine AS build
 
 WORKDIR /app
 
@@ -6,8 +6,8 @@ COPY package.json .
 RUN npm install
 
 COPY . .
-RUN npm run build
+RUN npm run build --prod
 
-FROM nginx:latest
+FROM arm64v8/nginx:alpine
 
 COPY --from=build /app/dist/sanbar-app /usr/share/nginx/html
