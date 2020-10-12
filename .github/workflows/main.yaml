@@ -1,15 +1,15 @@
 name: Build
 
-on: push
+on:
+  push:
+    branches:
+        - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v2
-        - name: docker build proxy
-          run: |
-            docker build ./proxy -t michael816/proxy:latest
         - name: docker build sanbar-app
           run: |
             docker build ./sanbar-app -t michael816/sanbar-app:latest
@@ -24,7 +24,6 @@ jobs:
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         - name: docker push
           run: |
-            docker push michael816/proxy:latest
             docker push michael816/sanbar-app:latest
             docker push michael816/sanbar-api:latest
         - name: setup ssh
