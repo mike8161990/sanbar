@@ -1,10 +1,14 @@
 version: "3.8"
 services:
-  proxy:
-    build: ./proxy
+  frontend:
+    image: michael816/sanbar-app:latest
+    build: ./frontend
     ports:
       - "80:80"
-  frontend:
-    build: ./sanbar-app
+      - "443:443"
+    volumes:
+        - /etc/letsencrypt/live/app.mikeschwartz.net/fullchain.pem:/etc/letsencrypt/live/app.mikeschwartz.net/fullchain.pem
+        - /etc/letsencrypt/live/app.mikeschwartz.net/privkey.pem:/etc/letsencrypt/live/app.mikeschwartz.net/privkey.pem
   backend:
-    build: ./Sanbar.Api
+    image: michael816/sanbar-api:latest
+    build: ./backend

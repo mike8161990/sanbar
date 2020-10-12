@@ -44,3 +44,12 @@ Install Docker-Compose
 
     sudo curl -L "https://github.com/docker/compose/releases/download/1.27.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
+
+## Remote Host
+
+The production server needs Docker installed as well as access granted to the deployment service account. Uses the commands below to generate the secrets.
+
+    sudo adduser deploy
+    sudo usermod -aG docker deploy
+    sudo su deploy
+    ssh-keygen
