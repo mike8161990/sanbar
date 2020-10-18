@@ -53,3 +53,12 @@ The production server needs Docker installed as well as access granted to the de
     sudo usermod -aG docker deploy
     sudo su deploy
     ssh-keygen
+
+## Other Notes
+
+For local development, a self-signed certificate was generated using this command
+
+    openssl req -x509 -newkey rsa:4096 -nodes \
+        -subj '/CN=app.mikeschwartz.net' \
+        -keyout frontend/test-certs/privkey.pem \
+        -out frontend/test-certs/fullchain.pem
