@@ -12,10 +12,10 @@ jobs:
         - uses: actions/checkout@v2
         - name: docker build sanbar-app
           run: |
-            docker build ./frontend -t michael816/sanbar-app:latest
+            docker build -f frontend/linux-arm64.Dockerfile -t michael816/sanbar-app:linux-arm64 frontend
         - name: docker build sanbar-api
           run: |
-            docker build ./backend -t michael816/sanbar-api:latest
+            docker build -f backend/linux-arm64.Dockerfile -t michael816/sanbar-api:linux-arm64 backend
         - name: docker login
           env:
             DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -24,8 +24,8 @@ jobs:
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         - name: docker push
           run: |
-            docker push michael816/sanbar-app:latest
-            docker push michael816/sanbar-api:latest
+            docker push michael816/sanbar-app:linux-arm64
+            docker push michael816/sanbar-api:linux-arm64
         - name: setup ssh
           run: |
             mkdir ~/.ssh
@@ -44,11 +44,11 @@ jobs:
             SSH_KEY: ${{ secrets.SSH_KEY }}
         - name: docker-compose pull
           run: |
-            docker-compose -f docker-compose.yaml pull
+            docker-compose -f docker-compose.prod.yaml pull
           env:
             DOCKER_HOST: ssh://${{ secrets.SSH_HOST }}
         - name: docker-compose up
           run: |
-            docker-compose -f docker-compose.yaml up -d --remove-orphans
+            docker-compose -f docker-compose.prod.yaml up -d --remove-orphans
           env:
             DOCKER_HOST: ssh://${{ secrets.SSH_HOST }}

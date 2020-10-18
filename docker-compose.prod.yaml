@@ -1,8 +1,10 @@
 version: "3.8"
 services:
   frontend:
-    image: michael816/sanbar-app:latest
-    build: ./frontend
+    image: michael816/sanbar-app:linux-arm64
+    build:
+      context: ./frontend
+      dockerfile: linux-arm64.Dockerfile
     ports:
       - "80:80"
       - "443:443"
@@ -10,5 +12,7 @@ services:
         - /etc/letsencrypt/live/app.mikeschwartz.net/fullchain.pem:/etc/letsencrypt/live/app.mikeschwartz.net/fullchain.pem
         - /etc/letsencrypt/live/app.mikeschwartz.net/privkey.pem:/etc/letsencrypt/live/app.mikeschwartz.net/privkey.pem
   backend:
-    image: michael816/sanbar-api:latest
-    build: ./backend
+    image: michael816/sanbar-api:linux-arm64
+    build:
+      context: ./backend
+      dockerfile: linux-amrm4.Dockerfile
