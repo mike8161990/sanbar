@@ -2,13 +2,13 @@ FROM node:alpine AS build
 
 WORKDIR /app
 
-COPY sanbar-app/package.json sanbar-app/package-lock.json ./
+COPY home-app/package.json home-app/package-lock.json ./
 RUN npm install
 
-COPY sanbar-app/. .
+COPY home-app/. .
 RUN npm run build --prod
 
 FROM nginx:alpine
 
 COPY nginx/default.conf /etc/nginx/conf.d
-COPY --from=build /app/dist/sanbar-app /usr/share/nginx/html
+COPY --from=build /app/dist/home-app /usr/share/nginx/html

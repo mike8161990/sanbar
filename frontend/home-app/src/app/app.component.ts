@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { faHardHat } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -7,6 +6,5 @@ import { faHardHat } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'sanbar-app';
-  hardHatIcon = faHardHat;
+  title = 'home-app';
 }
