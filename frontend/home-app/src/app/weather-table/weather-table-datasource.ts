@@ -3,49 +3,33 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { map } from 'rxjs/operators';
 import { Observable, of as observableOf, merge } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
-// TODO: Replace this with your own data model type
 export interface WeatherTableItem {
-  name: string;
-  id: number;
+  date: Date,
+  temperatureC: number,
+  temperatureF: number,
+  summary: string
 }
-
-// TODO: replace this with real data from your application
-const EXAMPLE_DATA: WeatherTableItem[] = [
-  {id: 1, name: 'Hydrogen'},
-  {id: 2, name: 'Helium'},
-  {id: 3, name: 'Lithium'},
-  {id: 4, name: 'Beryllium'},
-  {id: 5, name: 'Boron'},
-  {id: 6, name: 'Carbon'},
-  {id: 7, name: 'Nitrogen'},
-  {id: 8, name: 'Oxygen'},
-  {id: 9, name: 'Fluorine'},
-  {id: 10, name: 'Neon'},
-  {id: 11, name: 'Sodium'},
-  {id: 12, name: 'Magnesium'},
-  {id: 13, name: 'Aluminum'},
-  {id: 14, name: 'Silicon'},
-  {id: 15, name: 'Phosphorus'},
-  {id: 16, name: 'Sulfur'},
-  {id: 17, name: 'Chlorine'},
-  {id: 18, name: 'Argon'},
-  {id: 19, name: 'Potassium'},
-  {id: 20, name: 'Calcium'},
-];
 
 /**
  * Data source for the WeatherTable view. This class should
  * encapsulate all logic for fetching and manipulating the displayed data
  * (including sorting, pagination, and filtering).
  */
+@Injectable()
 export class WeatherTableDataSource extends DataSource<WeatherTableItem> {
-  data: WeatherTableItem[] = EXAMPLE_DATA;
+  data: WeatherTableItem[];
   paginator: MatPaginator;
   sort: MatSort;
 
-  constructor() {
+  constructor(private http: HttpClient) {
     super();
+
+    http.get<WeatherTableItem[]>('api/WeatherForecast').subscribe(result => {
+      this.data = result;
+    }, error => console.error(error));
   }
 
   /**
@@ -94,8 +78,10 @@ export class WeatherTableDataSource extends DataSource<WeatherTableItem> {
     return data.sort((a, b) => {
       const isAsc = this.sort.direction === 'asc';
       switch (this.sort.active) {
-        case 'name': return compare(a.name, b.name, isAsc);
-        case 'id': return compare(+a.id, +b.id, isAsc);
+        case 'date': return compare(a.date, b.date, isAsc);
+        case 'temperatureC': return compare(a.temperatureC, b.temperatureC, isAsc);
+        case 'temperatureF': return compare(a.temperatureF, b.temperatureF, isAsc);
+        case 'summary': return compare(a.summary, b.summary, isAsc);
         default: return 0;
       }
     });
@@ -103,6 +89,6 @@ export class WeatherTableDataSource extends DataSource<WeatherTableItem> {
 }
 
 /** Simple sort comparator for example ID/Name columns (for client-side sorting). */
-function compare(a: string | number, b: string | number, isAsc: boolean) {
+function compare(a: string | number | Date, b: string | number | Date, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

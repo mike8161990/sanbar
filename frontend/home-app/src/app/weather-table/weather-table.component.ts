@@ -13,14 +13,14 @@ export class WeatherTableComponent implements AfterViewInit, OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<WeatherTableItem>;
-  dataSource: WeatherTableDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['id', 'name'];
+  displayedColumns = ['date', 'temperatureC', 'temperatureF', 'summary'];
 
-  ngOnInit() {
-    this.dataSource = new WeatherTableDataSource();
+  constructor(public dataSource: WeatherTableDataSource) {
   }
+
+  ngOnInit() {}
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;

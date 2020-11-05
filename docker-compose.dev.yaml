@@ -16,3 +16,5 @@ services:
     build:
       context: ./backend
       dockerfile: linux-x64.Dockerfile
+    ports:
+      - "5000:80"
