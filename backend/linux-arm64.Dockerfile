@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ RUN dotnet publish Sanbar.Api \
     --output out \
     --runtime linux-arm64
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-focal-arm64v8 AS run
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-focal-arm64v8 AS run
 
 WORKDIR /app
 
